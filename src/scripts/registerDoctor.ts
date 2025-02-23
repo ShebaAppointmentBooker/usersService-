@@ -24,10 +24,10 @@ const register = async () => {
   // Static data for doctor registration
   const name = "Dr. John Doe";
   const email = "john.doe@example.com";
-  const password = "password123";
+  const nationalId = "065165482";
   const specialization = "Cardiology";
 
-  await registerDoctor(name, email, password, specialization);
+  await registerDoctor(name, email, nationalId, specialization);
 };
 
 register().then(() => {

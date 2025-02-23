@@ -1,11 +1,13 @@
 import express from 'express';
-import { loginPatient, logoutPatient, registerPatient,refreshPatientToken } from '../controllers/patientController';
+import {  logoutPatient, registerPatient,refreshPatientToken, requestOtpPatient, loginPatientOtp } from '../controllers/patientController';
 
 const router = express.Router();
-
-router.post('/login', loginPatient);
+router.post('/requestotp', requestOtpPatient);
+router.post('/loginotp', loginPatientOtp);
+// router.post('/login', loginPatient);
 router.post('/refreshtoken', refreshPatientToken);
 router.post('/logout', logoutPatient);
+
 
 // Patient registration route
 router.post('/register', async (req, res) => {

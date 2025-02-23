@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import { refreshTokenHandler } from "../handlers/refreshTokenHandler";
+import { loginWithOtpHandler, requestOtpHandler } from "../handlers/otpHandler";
 const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
 const REFRESH_TOKEN_SECRET =
   process.env.REFRESH_TOKEN_SECRET || "yourRefreshSecret";
@@ -11,7 +12,7 @@ const JWT_EXPIRES_IN = "1h";
 export const registerDoctor = async (
   name: string,
   email: string,
-  password: string,
+  nationalId: string,
   specialization: string
 ) => {
   try {
@@ -21,12 +22,13 @@ export const registerDoctor = async (
       return;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     const newDoctor = new Doctor({
       name,
       email,
-      password: hashedPassword,
+      // password: hashedPassword,
+      nationalId,
       specialization,
       phone: "N/A", // You can customize this to include a phone or other properties
     });
@@ -37,49 +39,61 @@ export const registerDoctor = async (
     console.error("Error registering doctor:", error);
   }
 };
-export const loginDoctor = async (
+export const requestOtpDoctor = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  const { email, password } = req.body;
-
-  try {
-    const doctor = await Doctor.findOne({ email });
-    if (!doctor) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    const isMatch = await bcrypt.compare(password, doctor.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    // Generate Access Token
-    const accessToken = jwt.sign(
-      { userId: doctor._id, role: "doctor" },
-      JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
-    );
-
-    // Generate Refresh Token
-    const refreshToken = jwt.sign(
-      { userId: doctor._id, role: "doctor" },
-      REFRESH_TOKEN_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    doctor.refreshToken = refreshToken;
-    await doctor.save();
-
-    res.status(200).json({
-      user: doctor.name,
-      accessToken,
-      refreshToken,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
-  }
+  requestOtpHandler(Doctor, req, res);
 };
+export const loginDoctorOtp = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  loginWithOtpHandler(req, res);
+};
+// export const loginDoctor = async (
+//   req: Request,
+//   res: Response
+// ): Promise<any> => {
+//   const { email, password } = req.body;
+
+//   try {
+//     const doctor = await Doctor.findOne({ email });
+//     if (!doctor) {
+//       return res.status(400).json({ message: "Invalid email or password" });
+//     }
+
+//     const isMatch = await bcrypt.compare(password, doctor.password);
+//     if (!isMatch) {
+//       return res.status(400).json({ message: "Invalid email or password" });
+//     }
+
+//     // Generate Access Token
+//     const accessToken = jwt.sign(
+//       { userId: doctor._id, role: "doctor" },
+//       JWT_SECRET,
+//       { expiresIn: JWT_EXPIRES_IN }
+//     );
+
+//     // Generate Refresh Token
+//     const refreshToken = jwt.sign(
+//       { userId: doctor._id, role: "doctor" },
+//       REFRESH_TOKEN_SECRET,
+//       { expiresIn: "7d" }
+//     );
+
+//     doctor.refreshToken = refreshToken;
+//     await doctor.save();
+
+//     res.status(200).json({
+//       user: doctor.name,
+//       accessToken,
+//       refreshToken,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 export const refreshDoctorToken = (req: Request, res: Response) => {
   refreshTokenHandler(Doctor, req, res);
 };

@@ -1,9 +1,10 @@
 import express from 'express';
-import { loginDoctor, logoutDoctor, registerDoctor,refreshDoctorToken } from '../controllers/doctorController';
+import {  logoutDoctor, registerDoctor,refreshDoctorToken, requestOtpDoctor, loginDoctorOtp } from '../controllers/doctorController';
 
 const router = express.Router();
-
-router.post('/login', loginDoctor);
+router.post('/requestotp', requestOtpDoctor);
+router.post('/loginotp', loginDoctorOtp);
+// router.post('/login', loginDoctor);
 router.post('/refreshtoken', refreshDoctorToken);
 router.post('/logout', logoutDoctor);
 

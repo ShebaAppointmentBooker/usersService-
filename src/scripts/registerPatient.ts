@@ -20,12 +20,12 @@ const register = async () => {
   await connectDB();
 
   // Static data for patient registration
-  const name = 'Jane Smith';
-  const email = 'jane.smith@example.com';
-  const password = 'password123';
-  const medicalHistory = 'No known allergies or conditions';
+  const name = 'Lior Aviv';
+  const email = 'lioraviv1312@gmail.com';
+  const nationalId = '323104059';
+  const medicalHistory = 'IBS';
 
-  await registerPatient(name, email, password, medicalHistory);
+  await registerPatient(name, email, nationalId, medicalHistory);
 };
 
 register().then(() => {
