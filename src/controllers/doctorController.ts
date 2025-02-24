@@ -49,7 +49,7 @@ export const loginDoctorOtp = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  loginWithOtpHandler(req, res);
+  loginWithOtpHandler(Doctor,req, res);
 };
 // export const loginDoctor = async (
 //   req: Request,

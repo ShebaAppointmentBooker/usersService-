@@ -10,12 +10,11 @@ import { loginWithOtpHandler, requestOtpHandler } from "../handlers/otpHandler";
 // const REFRESH_TOKEN_SECRET =
 //   process.env.REFRESH_TOKEN_SECRET || "yourRefreshSecret";
 
-
 export const registerPatient = async (
   name: string,
   email: string,
   // password: string,
-  nationalId:string,
+  nationalId: string,
   medicalHistory: string
 ) => {
   try {
@@ -52,7 +51,7 @@ export const loginPatientOtp = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  loginWithOtpHandler(req, res);
+  loginWithOtpHandler(Patient, req, res);
 };
 // Patient Login
 // export const loginPatient = async (
