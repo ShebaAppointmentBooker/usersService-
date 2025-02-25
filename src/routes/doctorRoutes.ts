@@ -1,23 +1,30 @@
-import express from 'express';
-import {  logoutDoctor, registerDoctor,refreshDoctorToken, requestOtpDoctor, loginDoctorOtp } from '../controllers/doctorController';
-import { jwtRequired } from '../middleware/authMiddleware';
+import express from "express";
+import {
+  logoutDoctor,
+  registerDoctor,
+  refreshDoctorToken,
+  requestOtpDoctor,
+  loginDoctorOtp,
+} from "../controllers/doctorController";
+import { jwtRequired } from "../middleware/authMiddleware";
+import { checkValid } from "../handlers/validTokenHandler";
 
 const router = express.Router();
-router.post('/requestotp', requestOtpDoctor);
-router.post('/loginotp', loginDoctorOtp);
+router.post("/requestotp", requestOtpDoctor);
+router.post("/loginotp", loginDoctorOtp);
 // router.post('/login', loginDoctor);
-router.post('/refreshtoken', refreshDoctorToken);
-router.post('/logout',jwtRequired, logoutDoctor);
-
+router.post("/refreshtoken", refreshDoctorToken);
+router.post("/logout", jwtRequired, logoutDoctor);
+router.post("/verify", checkValid);
 // Doctor registration route
-router.post('/register', async (req, res) => {
+router.post("/register", async (req, res) => {
   const { name, email, password, specialization } = req.body;
 
   try {
     await registerDoctor(name, email, password, specialization);
-    res.status(201).json({ message: 'Doctor registered successfully' });
+    res.status(201).json({ message: "Doctor registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Error registering doctor' });
+    res.status(500).json({ message: "Error registering doctor" });
   }
 });
 

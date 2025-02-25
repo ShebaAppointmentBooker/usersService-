@@ -100,6 +100,7 @@ export const loginPatientOtp = async (
 export const refreshPatientToken = (req: Request, res: Response) => {
   refreshTokenHandler(Patient, req, res);
 };
+
 // Patient Logout
 export const logoutPatient = async (
   req: Request,
