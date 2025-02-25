@@ -18,19 +18,33 @@ const connectDB = async () => {
 };
 
 // Run the registration
-const register = async () => {
-  await connectDB();
-
-  // Static data for doctor registration
-  const name = "Dr. John Doe";
-  const email = "john.doe@example.com";
-  const nationalId = "065165482";
-  const specialization = "Cardiology";
-
+const register = async (name: string, email: string, nationalId: string, specialization: string) => {
+ 
   await registerDoctor(name, email, nationalId, specialization);
+  console.log(`${name} registered successfully!`);
 };
+const registerMultipleDoctors = async () => {
+  await connectDB();
+  const doctors = [
+    // { name: 'Dr. John Doe', email: 'john.doe@example.com', nationalId: '065165482', specialization: 'Cardiology' },
+    { name: 'Dr. Jane Smith', email: 'jane.smith@example.com', nationalId: '065165483', specialization: 'Neurology' },
+    { name: 'Dr. Alan Black', email: 'alan.black@example.com', nationalId: '065165484', specialization: 'Dermatology' },
+    { name: 'Dr. Sarah White', email: 'sarah.white@example.com', nationalId: '065165485', specialization: 'Orthopedics' },
+    { name: 'Dr. Mike Green', email: 'mike.green@example.com', nationalId: '065165486', specialization: 'Pediatrics' },
+    { name: 'Dr. Lisa Blue', email: 'lisa.blue@example.com', nationalId: '065165487', specialization: 'Gastroenterology' },
+    { name: 'Dr. Rachel Pink', email: 'rachel.pink@example.com', nationalId: '065165488', specialization: 'Cardiology' },
+  ];
 
-register().then(() => {
-  console.log("Doctor registration complete");
+  // Loop through the doctors array and call the register function for each
+  for (const doctor of doctors) {
+    await register(doctor.name, doctor.email, doctor.nationalId, doctor.specialization);
+  }
+  console.log('All doctors registered successfully!');
+};
+registerMultipleDoctors().then(() => {
+  console.log('Doctor registration complete');
   process.exit();
+}).catch((err) => {
+  console.error('Error in doctor registration:', err);
+  process.exit(1);
 });

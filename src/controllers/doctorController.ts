@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import { refreshTokenHandler } from "../handlers/refreshTokenHandler";
 import { loginWithOtpHandler, requestOtpHandler } from "../handlers/otpHandler";
+import Specialization from "../models/specializationModel";
 const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
 const REFRESH_TOKEN_SECRET =
   process.env.REFRESH_TOKEN_SECRET || "yourRefreshSecret";
@@ -13,7 +14,7 @@ export const registerDoctor = async (
   name: string,
   email: string,
   nationalId: string,
-  specialization: string
+  specializationName: string
 ) => {
   try {
     const existingDoctor = await Doctor.findOne({ email });
@@ -23,13 +24,18 @@ export const registerDoctor = async (
     }
 
     // const hashedPassword = await bcrypt.hash(password, 10);
+    const specializationRef = await Specialization.findOne({ name: specializationName });
 
+    if (!specializationRef) {
+      throw new Error(`Specialization ${specializationName} not found`);
+    }
+    console.log("i found the spezzzzzzzzzzzzzzzzz")
     const newDoctor = new Doctor({
       name,
       email,
       // password: hashedPassword,
       nationalId,
-      specialization,
+      specialization: specializationRef._id,
       phone: "N/A", // You can customize this to include a phone or other properties
     });
 
