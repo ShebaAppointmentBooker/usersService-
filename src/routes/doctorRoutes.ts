@@ -5,9 +5,9 @@ import {
   refreshDoctorToken,
   requestOtpDoctor,
   loginDoctorOtp,
+  checkValidDoctor,
 } from "../controllers/doctorController";
 import { jwtRequired } from "../middleware/authMiddleware";
-import { checkValid } from "../handlers/validTokenHandler";
 
 const router = express.Router();
 router.post("/requestotp", requestOtpDoctor);
@@ -15,7 +15,7 @@ router.post("/loginotp", loginDoctorOtp);
 // router.post('/login', loginDoctor);
 router.post("/refreshtoken", refreshDoctorToken);
 router.post("/logout", jwtRequired, logoutDoctor);
-router.post("/verify", checkValid);
+router.post("/verify", checkValidDoctor);
 // Doctor registration route
 router.post("/register", async (req, res) => {
   const { name, email, password, specialization } = req.body;

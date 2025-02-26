@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import { refreshTokenHandler } from "../handlers/refreshTokenHandler";
 import { loginWithOtpHandler, requestOtpHandler } from "../handlers/otpHandler";
+import { checkValid } from "../handlers/validTokenHandler";
 
 // const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
 // const REFRESH_TOKEN_SECRET =
@@ -100,7 +101,13 @@ export const loginPatientOtp = async (
 export const refreshPatientToken = (req: Request, res: Response) => {
   refreshTokenHandler(Patient, req, res);
 };
-
+export const checkValidPatient = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  
+  checkValid(Patient,req,res)
+};
 // Patient Logout
 export const logoutPatient = async (
   req: Request,

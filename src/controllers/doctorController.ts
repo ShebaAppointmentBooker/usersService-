@@ -6,6 +6,7 @@ import { Request, Response } from "express";
 import { refreshTokenHandler } from "../handlers/refreshTokenHandler";
 import { loginWithOtpHandler, requestOtpHandler } from "../handlers/otpHandler";
 import Specialization from "../models/specializationModel";
+import { checkValid } from "../handlers/validTokenHandler";
 const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
 const REFRESH_TOKEN_SECRET =
   process.env.REFRESH_TOKEN_SECRET || "yourRefreshSecret";
@@ -102,6 +103,13 @@ export const loginDoctorOtp = async (
 // };
 export const refreshDoctorToken = (req: Request, res: Response) => {
   refreshTokenHandler(Doctor, req, res);
+};
+export const checkValidDoctor = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  
+  checkValid(Doctor,req,res)
 };
 // Doctor Logout
 export const logoutDoctor = async (
