@@ -14,7 +14,7 @@ export const registerDoctor = async (
   name: string,
   email: string,
   nationalId: string,
-  specializationName: string
+  specializationNames: string[]
 ) => {
   try {
     const existingDoctor = await Doctor.findOne({ email });
@@ -23,20 +23,20 @@ export const registerDoctor = async (
       return;
     }
 
-    // const hashedPassword = await bcrypt.hash(password, 10);
-    const specializationRef = await Specialization.findOne({ name: specializationName });
+    const specializationRefs = await Specialization.find({ name: { $in: specializationNames } });
 
-    if (!specializationRef) {
-      throw new Error(`Specialization ${specializationName} not found`);
+    if (specializationRefs.length !== specializationNames.length) {
+      const foundNames = specializationRefs.map(spec => spec.name);
+      const missingNames = specializationNames.filter(name => !foundNames.includes(name));
+      throw new Error(`Specializations not found: ${missingNames.join(", ")}`);
     }
-    console.log("i found the spezzzzzzzzzzzzzzzzz")
+
     const newDoctor = new Doctor({
       name,
       email,
-      // password: hashedPassword,
       nationalId,
-      specialization: specializationRef._id,
-      phone: "N/A", // You can customize this to include a phone or other properties
+      specializations: specializationRefs.map(spec => spec._id),
+      phone: "N/A",
     });
 
     await newDoctor.save();

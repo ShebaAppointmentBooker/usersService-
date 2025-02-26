@@ -4,7 +4,7 @@ export interface IDoctor extends Document {
   name: string;
   email: string;
   nationalId: string;
-  specialization: Schema.Types.ObjectId;
+  specializations: Schema.Types.ObjectId[]; // Updated to an array for multiple specializations
   phone?: string;
   refreshToken?: string;
   createdAt: Date;
@@ -14,7 +14,7 @@ const doctorSchema = new Schema<IDoctor>({
   name: { type: String, required: true },
   email: { type: String, required: true },
   nationalId: { type: String, required: true, unique: true },
-  specialization: { type: Schema.Types.ObjectId, ref: "Specialization", required: true },
+  specializations: [{ type: Schema.Types.ObjectId, ref: "Specialization", required: true }], // Array of specializations
   phone: { type: String },
   refreshToken: { type: String, default: "" },
   createdAt: { type: Date, default: Date.now },
