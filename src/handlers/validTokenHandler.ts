@@ -28,11 +28,11 @@ export const checkValid = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  const { token } = req.body;
-  if (!token) {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
     return res.status(400).json({ message: "Token is required" });
   }
-  const userId = checkRefreshTokenValidity(token);
+  const userId = checkRefreshTokenValidity(refreshToken);
   if (userId) {
     const user = await model.findById(userId);
 
