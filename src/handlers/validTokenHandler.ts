@@ -2,15 +2,17 @@ import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 
 const REFRESH_TOKEN_SECRET =
-  process.env.REFRESH_TOKEN_SECRET || "yourSecretKey";
+  process.env.REFRESH_TOKEN_SECRET || "yourRefreshSecret";
 
 const checkRefreshTokenValidity = (refreshToken: string): string => {
   try {
-    const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as {
+    
+    const decodedtry = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as {
       userId: string;
     };
-
-    return decoded.userId; // Token is valid
+   
+    console.log("valid");
+    return decodedtry.userId; // Token is valid
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       console.log("Token has expired");
