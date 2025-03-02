@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
 const REFRESH_TOKEN_SECRET =
   process.env.REFRESH_TOKEN_SECRET || "yourRefreshSecret";
-const JWT_EXPIRES_IN = "1h";
+const JWT_EXPIRES_IN = "1m";
 export const requestOtpHandler = async (
   model: any,
   req: Request,
@@ -57,6 +57,7 @@ export const loginWithOtpHandler = async (
     const accessToken = jwt.sign({ userId: decoded.userId }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
+    console.log("your new token expires is ",JWT_EXPIRES_IN)
     const refreshToken = jwt.sign(
       { userId: decoded.userId },
       REFRESH_TOKEN_SECRET,

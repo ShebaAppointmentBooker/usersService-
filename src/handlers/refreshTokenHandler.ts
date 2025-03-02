@@ -21,20 +21,24 @@ export const refreshTokenHandler = async (
 
   try {
     // Verify the refresh token
+    console.log(refreshToken)
+    // const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as {
+    //   userId: string;
+    // };
     const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as {
       userId: string;
     };
-
+   
     // Try finding the user in the passed model (Doctor or Patient)
     const user = await model.findById(decoded.userId);
 
     if (!user) {
       return res.status(403).json({ message: "User not found" });
     }
-
+    
     // Create new access token
     const newAccessToken = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1m",
     });
     const newRefreshToken = jwt.sign(
       { userId: user._id },
@@ -46,6 +50,7 @@ export const refreshTokenHandler = async (
     user.refreshToken = newRefreshToken;
     await user.save();
     // Optionally rotate refresh token (in a real case, you could also generate and send a new refresh token)
+    console.log("refereshed")
     res.json({
       accessToken: newAccessToken,
       refreshToken:newRefreshToken, // You may rotate refresh tokens as well (send new refreshToken if you want to)
