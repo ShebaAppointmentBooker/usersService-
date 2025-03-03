@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
-
+import Patient from "../models/patientModel";
 const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
 const REFRESH_TOKEN_SECRET =
   process.env.REFRESH_TOKEN_SECRET || "yourRefreshSecret";
@@ -57,7 +57,7 @@ export const loginWithOtpHandler = async (
     const accessToken = jwt.sign({ userId: decoded.userId }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
-    console.log("your new token expires is ",JWT_EXPIRES_IN)
+    console.log("your new token expires is ", JWT_EXPIRES_IN);
     const refreshToken = jwt.sign(
       { userId: decoded.userId },
       REFRESH_TOKEN_SECRET,
@@ -65,12 +65,22 @@ export const loginWithOtpHandler = async (
         expiresIn: "7d",
       }
     );
-    await model.findByIdAndUpdate(decoded.userId, { refreshToken });
-    return res.json({
+    const existingUser = await model.findByIdAndUpdate(decoded.userId, {
+      refreshToken,
+    });
+    console.log("user", existingUser);
+    const payload: any = {
       accessToken,
       refreshToken,
+      email: existingUser.email,
+      phone: existingUser.phone,
       message: "Logged in successfully",
-    });
+    };
+    if (model.modelName === "Patient") {
+      payload.medicalHistory = existingUser.medicalHistory;
+      console.log("patient");
+    }
+    return res.json(payload);
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       console.error("Token expired:", error);

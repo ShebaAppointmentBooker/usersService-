@@ -26,8 +26,10 @@ export const jwtRequired = (
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      userId: string;
+    };
+    req.user = decoded.userId;
     next();
   } catch (error) {
     console.error("JWT verification failed:", error);

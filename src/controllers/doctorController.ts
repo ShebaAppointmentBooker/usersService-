@@ -7,10 +7,8 @@ import { refreshTokenHandler } from "../handlers/refreshTokenHandler";
 import { loginWithOtpHandler, requestOtpHandler } from "../handlers/otpHandler";
 import Specialization from "../models/specializationModel";
 import { checkValid } from "../handlers/validTokenHandler";
-const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
-const REFRESH_TOKEN_SECRET =
-  process.env.REFRESH_TOKEN_SECRET || "yourRefreshSecret";
-const JWT_EXPIRES_IN = "1h";
+import { updateUserHandler } from "../handlers/updateUserHandler";
+
 export const registerDoctor = async (
   name: string,
   email: string,
@@ -24,11 +22,15 @@ export const registerDoctor = async (
       return;
     }
 
-    const specializationRefs = await Specialization.find({ name: { $in: specializationNames } });
+    const specializationRefs = await Specialization.find({
+      name: { $in: specializationNames },
+    });
 
     if (specializationRefs.length !== specializationNames.length) {
-      const foundNames = specializationRefs.map(spec => spec.name);
-      const missingNames = specializationNames.filter(name => !foundNames.includes(name));
+      const foundNames = specializationRefs.map((spec) => spec.name);
+      const missingNames = specializationNames.filter(
+        (name) => !foundNames.includes(name)
+      );
       throw new Error(`Specializations not found: ${missingNames.join(", ")}`);
     }
 
@@ -36,7 +38,7 @@ export const registerDoctor = async (
       name,
       email,
       nationalId,
-      specializations: specializationRefs.map(spec => spec._id),
+      specializations: specializationRefs.map((spec) => spec._id),
       phone: "N/A",
     });
 
@@ -56,51 +58,14 @@ export const loginDoctorOtp = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  loginWithOtpHandler(Doctor,req, res);
+  loginWithOtpHandler(Doctor, req, res);
 };
-// export const loginDoctor = async (
-//   req: Request,
-//   res: Response
-// ): Promise<any> => {
-//   const { email, password } = req.body;
-
-//   try {
-//     const doctor = await Doctor.findOne({ email });
-//     if (!doctor) {
-//       return res.status(400).json({ message: "Invalid email or password" });
-//     }
-
-//     const isMatch = await bcrypt.compare(password, doctor.password);
-//     if (!isMatch) {
-//       return res.status(400).json({ message: "Invalid email or password" });
-//     }
-
-//     // Generate Access Token
-//     const accessToken = jwt.sign(
-//       { userId: doctor._id, role: "doctor" },
-//       JWT_SECRET,
-//       { expiresIn: JWT_EXPIRES_IN }
-//     );
-
-//     // Generate Refresh Token
-//     const refreshToken = jwt.sign(
-//       { userId: doctor._id, role: "doctor" },
-//       REFRESH_TOKEN_SECRET,
-//       { expiresIn: "7d" }
-//     );
-
-//     doctor.refreshToken = refreshToken;
-//     await doctor.save();
-
-//     res.status(200).json({
-//       user: doctor.name,
-//       accessToken,
-//       refreshToken,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+export const updateDoctor = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  updateUserHandler(Doctor, req, res);
+};
 export const refreshDoctorToken = (req: Request, res: Response) => {
   refreshTokenHandler(Doctor, req, res);
 };
@@ -108,8 +73,7 @@ export const checkValidDoctor = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  
-  checkValid(Doctor,req,res)
+  checkValid(Doctor, req, res);
 };
 // Doctor Logout
 export const logoutDoctor = async (

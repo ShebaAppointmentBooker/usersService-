@@ -1,5 +1,5 @@
 import express from 'express';
-import {  logoutPatient, registerPatient,refreshPatientToken, requestOtpPatient, loginPatientOtp, checkValidPatient } from '../controllers/patientController';
+import {  logoutPatient, registerPatient,refreshPatientToken, requestOtpPatient, loginPatientOtp, checkValidPatient, updatePatient } from '../controllers/patientController';
 import { jwtRequired } from '../middleware/authMiddleware';
 
 const router = express.Router();
@@ -9,6 +9,7 @@ router.post('/loginotp', loginPatientOtp);
 router.post('/refreshtoken', refreshPatientToken);
 router.post('/logout',jwtRequired, logoutPatient);
 router.post("/verify", checkValidPatient);
+router.post('/update',jwtRequired, updatePatient);
 
 // Patient registration route
 router.post('/register', async (req, res) => {

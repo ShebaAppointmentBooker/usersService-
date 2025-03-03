@@ -6,6 +6,7 @@ import {
   requestOtpDoctor,
   loginDoctorOtp,
   checkValidDoctor,
+  updateDoctor,
 } from "../controllers/doctorController";
 import { jwtRequired } from "../middleware/authMiddleware";
 
@@ -16,6 +17,8 @@ router.post("/loginotp", loginDoctorOtp);
 router.post("/refreshtoken", refreshDoctorToken);
 router.post("/logout", jwtRequired, logoutDoctor);
 router.post("/verify", checkValidDoctor);
+router.post("/update", jwtRequired, updateDoctor);
+
 // Doctor registration route
 router.post("/register", async (req, res) => {
   const { name, email, password, specialization } = req.body;

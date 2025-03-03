@@ -6,6 +6,7 @@ import { Request, Response } from "express";
 import { refreshTokenHandler } from "../handlers/refreshTokenHandler";
 import { loginWithOtpHandler, requestOtpHandler } from "../handlers/otpHandler";
 import { checkValid } from "../handlers/validTokenHandler";
+import { updateUserHandler } from "../handlers/updateUserHandler";
 
 // const JWT_SECRET = process.env.JWT_SECRET || "yourSecretKey";
 // const REFRESH_TOKEN_SECRET =
@@ -54,50 +55,12 @@ export const loginPatientOtp = async (
 ): Promise<any> => {
   loginWithOtpHandler(Patient, req, res);
 };
-// Patient Login
-// export const loginPatient = async (
-//   req: Request,
-//   res: Response
-// ): Promise<any> => {
-//   const { email, password } = req.body;
-
-//   try {
-//     const patient = await Patient.findOne({ email });
-//     if (!patient) {
-//       return res.status(400).json({ message: "Invalid email or password" });
-//     }
-
-//     const isMatch = await bcrypt.compare(password, patient.password);
-//     if (!isMatch) {
-//       return res.status(400).json({ message: "Invalid email or password" });
-//     }
-
-//     // Generate Access Token
-//     const accessToken = jwt.sign(
-//       { userId: patient._id, role: "patient" },
-//       JWT_SECRET,
-//       { expiresIn: JWT_EXPIRES_IN }
-//     );
-
-//     // Generate Refresh Token
-//     const refreshToken = jwt.sign(
-//       { userId: patient._id, role: "patient" },
-//       REFRESH_TOKEN_SECRET,
-//       { expiresIn: "7d" }
-//     );
-
-//     patient.refreshToken = refreshToken;
-//     await patient.save();
-
-//     res.status(200).json({
-//       user: patient.name,
-//       accessToken,
-//       refreshToken,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+export const updatePatient = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  updateUserHandler(Patient, req, res);
+};
 export const refreshPatientToken = (req: Request, res: Response) => {
   refreshTokenHandler(Patient, req, res);
 };
